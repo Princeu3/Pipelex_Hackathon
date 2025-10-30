@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
+import fs from 'fs';
+import path from 'path';
 import { executePipelexWorkflow } from '@/lib/pipelex-client';
 
 export async function POST(request: NextRequest) {
@@ -20,14 +22,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Upload image to Vercel Blob
-    const blob = await put(imageFile.name, imageFile, {
-      access: 'public',
-    });
+    // Prefer Vercel Blob if token is available; otherwise fall back to local file save in dev
+    const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+    let uploadedImageUrl: string;
+
+    if (blobToken) {
+      const blob = await put(imageFile.name, imageFile, {
+        access: 'public',
+        token: blobToken,
+      });
+      uploadedImageUrl = blob.url;
+    } else {
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const safeName = `${Date.now()}_${imageFile.name.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
+      const filePath = path.join(uploadsDir, safeName);
+      fs.writeFileSync(filePath, buffer);
+      uploadedImageUrl = `/uploads/${safeName}`;
+    }
 
     // Execute image analysis workflow
     const result = await executePipelexWorkflow('analyze_product_image', {
-      image_url: blob.url,
+      image_url: uploadedImageUrl,
       product_info: productInfo,
     });
 
@@ -44,7 +65,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        imageUrl: blob.url,
+        imageUrl: uploadedImageUrl,
         analysis: result.output,
       },
       processingTime: result.executionTime,

@@ -24,6 +24,20 @@ export interface GeneratedAd {
   adCopy: AdCopyVariant[];
   createdAt: string;
   format: AdFormat;
+  videoPrompt?: string;
+  videoUrl?: string;
+  productAnalysis?: ProductAnalysis;
+}
+
+export interface ProductAnalysis {
+  product_type: string;
+  key_features: string;
+  target_audience: string;
+  use_case: string;
+  selling_points: string;
+  brand_vibe: string;
+  dominant_colors: string;
+  style_aesthetic: string;
 }
 
 export interface AdFormat {
@@ -100,4 +114,28 @@ export interface ExportOptions {
   format: 'json' | 'pdf' | 'html' | 'csv';
   includeImages: boolean;
   includeMetadata: boolean;
+}
+
+// Generation History Types
+export interface GenerationSummary {
+  id: string;
+  url: string;
+  createdAt: string;
+  productName: string;
+  imageUrl: string;
+  size: number;
+}
+
+export interface GenerationsListResponse {
+  success: boolean;
+  data?: GenerationSummary[];
+  count?: number;
+  error?: string;
+  message?: string;
+}
+
+export interface GenerationDetailResponse {
+  success: boolean;
+  data?: GeneratedAd;
+  error?: string;
 }

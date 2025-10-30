@@ -7,9 +7,17 @@ Generic script for executing any Pipelex workflow via API calls
 import asyncio
 import json
 import sys
+import logging
 from pathlib import Path
 from typing import Dict, Any
 from ad_generator import AdGenerator
+
+# Configure logging to stderr to prevent interference with JSON output
+logging.basicConfig(
+    level=logging.WARNING,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stderr
+)
 
 
 async def execute_workflow(workflow_name: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
@@ -50,6 +58,11 @@ async def execute_workflow(workflow_name: str, inputs: Dict[str, Any]) -> Dict[s
             tone=inputs.get("tone", "professional")
         )
 
+    elif workflow_name == "generate_video":
+        return await generator.generate_video(
+            video_prompt=inputs.get("video_prompt")
+        )
+
     else:
         return {
             "success": False,
@@ -66,10 +79,30 @@ async def main():
     workflow_name = input_data.get("workflow_name")
     inputs = input_data.get("inputs", {})
 
-    result = await execute_workflow(workflow_name, inputs)
-
-    # Output JSON to stdout
-    print(json.dumps(result))
+    # Save original stdout
+    original_stdout = sys.stdout
+    
+    try:
+        # Redirect stdout to stderr during workflow execution
+        # This prevents Pipelex's log messages from interfering with JSON output
+        sys.stdout = sys.stderr
+        
+        result = await execute_workflow(workflow_name, inputs)
+        
+        # Restore stdout before printing result
+        sys.stdout = original_stdout
+        
+        # Output JSON to stdout (only this line should go to stdout)
+        print(json.dumps(result), flush=True)
+        
+    except Exception as e:
+        # Restore stdout in case of error
+        sys.stdout = original_stdout
+        print(json.dumps({
+            "success": False,
+            "data": None,
+            "error": f"Workflow execution failed: {str(e)}"
+        }), flush=True)
 
 
 if __name__ == "__main__":

@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# pipelex
+.pipelex/
+
+# uploads and results
+/public/uploads/
+/results/

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Download, Copy, Check } from 'lucide-react';
+import { Download, Copy, Check, Video, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import type { GeneratedAd, AdCopyVariant } from '@/types/ad-generation';
 
@@ -12,11 +12,44 @@ interface AdPreviewProps {
 
 export function AdPreview({ ad, onExport }: AdPreviewProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(ad.videoUrl || null);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
     await navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const handleGenerateVideo = async () => {
+    if (!ad.videoPrompt) {
+      setVideoError('No video prompt available');
+      return;
+    }
+
+    setIsGeneratingVideo(true);
+    setVideoError(null);
+
+    try {
+      const response = await fetch('/api/generate-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoPrompt: ad.videoPrompt }),
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.data.videoUrl) {
+        setVideoUrl(result.data.videoUrl);
+      } else {
+        setVideoError(result.error || 'Failed to generate video');
+      }
+    } catch (error) {
+      setVideoError(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setIsGeneratingVideo(false);
+    }
   };
 
   const getToneBadgeColor = (tone: string) => {
@@ -64,10 +97,68 @@ export function AdPreview({ ad, onExport }: AdPreviewProps) {
         </dl>
       </div>
 
+      {/* Video Prompt Section */}
+      {ad.videoPrompt && (
+        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Video Generation Prompt</h3>
+            <button
+              onClick={handleGenerateVideo}
+              disabled={isGeneratingVideo || !!videoUrl}
+              className="flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {isGeneratingVideo ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Generating Video...</span>
+                </>
+              ) : videoUrl ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  <span>Video Generated</span>
+                </>
+              ) : (
+                <>
+                  <Video className="h-4 w-4" />
+                  <span>Generate Video with Veo 3</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="rounded-lg bg-gray-50 p-4">
+            <p className="whitespace-pre-wrap text-sm text-gray-700">{ad.videoPrompt}</p>
+          </div>
+
+          {videoError && (
+            <div className="mt-4 rounded-lg bg-red-50 p-4">
+              <p className="text-sm text-red-800">{videoError}</p>
+            </div>
+          )}
+
+          {videoUrl && (
+            <div className="mt-4">
+              <video
+                src={videoUrl}
+                controls
+                className="w-full rounded-lg"
+                style={{ maxHeight: '500px' }}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+
+          <p className="mt-2 text-xs text-gray-500">
+            Cost: $3.20 per video • Model: Veo 3 Fast via Blackbox AI
+          </p>
+        </div>
+      )}
+
       {/* Ad Variants */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Generated Ad Copy Variants</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Generated Ad Copy</h3>
           <button
             onClick={() => onExport('json')}
             className="flex items-center space-x-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"

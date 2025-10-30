@@ -9,8 +9,8 @@ version = "0.1.0"
 enabled = false
 
 [paths]
-libraries = ["pipelex"]
-functions = ["scripts"]
+libraries = ["./pipelex"]
+functions = ["./scripts"]
 
 [logging]
 level = "INFO"

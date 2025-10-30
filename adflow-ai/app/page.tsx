@@ -3,13 +3,18 @@
 import { useState } from 'react';
 import { AdGenerationForm } from '@/components/ad-generation-form';
 import { AdPreview } from '@/components/ad-preview';
-import { Sparkles, Zap } from 'lucide-react';
+import { GenerationHistory } from '@/components/generation-history';
+import { Sparkles, Zap, History, Plus } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import type { GeneratedAd } from '@/types/ad-generation';
+import Image from 'next/image';
+
+type ViewMode = 'create' | 'preview' | 'history';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedAd, setGeneratedAd] = useState<GeneratedAd | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('create');
 
   const handleGenerateAd = async (formData: FormData) => {
     setIsLoading(true);
@@ -27,6 +32,7 @@ export default function Home() {
       }
 
       setGeneratedAd(result.data);
+      setViewMode('preview');
       toast.success('Ad generated successfully!', {
         description: `Generated ${result.data.adCopy.length} ad variants in ${(result.processingTime / 1000).toFixed(1)}s`,
       });
@@ -38,6 +44,17 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLoadGeneration = (generation: GeneratedAd) => {
+    setGeneratedAd(generation);
+    setViewMode('preview');
+    toast.success('Generation loaded successfully!');
+  };
+
+  const handleNewGeneration = () => {
+    setGeneratedAd(null);
+    setViewMode('create');
   };
 
   const handleExport = (format: string) => {
@@ -63,15 +80,49 @@ export default function Home() {
         {/* Header */}
         <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center space-x-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-purple-600">
-                <Sparkles className="h-6 w-6 text-white" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="relative h-12 w-12 overflow-hidden rounded-xl">
+                  <Image
+                    src="/assets/logo.png"
+                    alt="AdFlow AI Logo"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">AdFlow AI</h1>
+                  <p className="text-sm text-gray-600">
+                    AI-Powered Product Ad Generator
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">AdFlow AI</h1>
-                <p className="text-sm text-gray-600">
-                  AI-Powered Product Ad Generator
-                </p>
+
+              {/* Navigation */}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleNewGeneration}
+                  className={`flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    viewMode === 'create'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>New Ad</span>
+                </button>
+                <button
+                  onClick={() => setViewMode('history')}
+                  className={`flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    viewMode === 'history'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <History className="h-4 w-4" />
+                  <span>History</span>
+                </button>
               </div>
             </div>
           </div>
@@ -79,7 +130,19 @@ export default function Home() {
 
         {/* Main Content */}
         <main className="container mx-auto px-4 py-12">
-          {!generatedAd ? (
+          {viewMode === 'history' ? (
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Generation History
+                </h2>
+                <p className="text-gray-600">
+                  View and load your previously generated ads
+                </p>
+              </div>
+              <GenerationHistory onLoadGeneration={handleLoadGeneration} />
+            </div>
+          ) : viewMode === 'create' ? (
             <div className="mx-auto max-w-3xl">
               {/* Hero Section */}
               <div className="mb-12 text-center">
@@ -153,18 +216,26 @@ export default function Home() {
               <div className="mb-8 flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900">
-                    Your Generated Ads
+                    Your Generated Ad
                   </h2>
                   <p className="text-gray-600">
-                    Review and export your AI-generated ad copy variants
+                    Review, export, or generate video from your ad
                   </p>
                 </div>
-                <button
-                  onClick={() => setGeneratedAd(null)}
-                  className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700"
-                >
-                  Create New Ad
-                </button>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => setViewMode('history')}
+                    className="rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                  >
+                    View History
+                  </button>
+                  <button
+                    onClick={handleNewGeneration}
+                    className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+                  >
+                    Create New Ad
+                  </button>
+                </div>
               </div>
 
               {/* Ad Preview */}

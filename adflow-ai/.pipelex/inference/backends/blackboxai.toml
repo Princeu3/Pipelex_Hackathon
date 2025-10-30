@@ -229,3 +229,17 @@ model_id = "blackboxai/google/nano-banana"
 inputs = ["text"]
 outputs = ["image"]
 costs = { input = 0.0, output = 0.039 }
+
+################################################################################
+# VIDEO GENERATION MODELS
+################################################################################
+# Note: Pipelex doesn't have native video generation support yet
+# Video generation will be handled directly via Blackbox AI API
+
+[veo-3-fast]
+model_type = "img_gen"
+sdk = "openai_alt_img_gen"
+model_id = "blackboxai/google/veo-3-fast"
+inputs = ["text"]
+outputs = ["image"]
+costs = { input = 0.0, output = 3.20 }

@@ -1,0 +1,14 @@
+# AdFlow AI - Python Dependencies
+
+# Core dependencies
+pipelex>=0.14.3
+
+# FastAPI for Railway deployment
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+pydantic>=2.5.0
+
+# Optional: for enhanced functionality
+python-dotenv>=1.0.0
+

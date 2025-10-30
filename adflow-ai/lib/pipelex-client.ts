@@ -53,7 +53,55 @@ export async function executePipelexWorkflow(
       }
 
       try {
-        const result = JSON.parse(outputData);
+        // Extract JSON from output (ignore warnings and other text)
+        // Try multiple strategies to find valid JSON
+        let result = null;
+        
+        // Strategy 1: Look for lines starting with { and ending with }
+        const lines = outputData.split('\n');
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+            try {
+              result = JSON.parse(trimmed);
+              break;
+            } catch {
+              continue;
+            }
+          }
+        }
+        
+        // Strategy 2: Find the last complete JSON object
+        if (!result) {
+          const matches = outputData.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g);
+          if (matches && matches.length > 0) {
+            // Try from the last match backwards (most likely to be our result)
+            for (let i = matches.length - 1; i >= 0; i--) {
+              try {
+                result = JSON.parse(matches[i]);
+                break;
+              } catch {
+                continue;
+              }
+            }
+          }
+        }
+        
+        // Strategy 3: Traditional first { to last }
+        if (!result) {
+          const firstBrace = outputData.indexOf('{');
+          const lastBrace = outputData.lastIndexOf('}');
+          
+          if (firstBrace !== -1 && lastBrace !== -1) {
+            const jsonString = outputData.substring(firstBrace, lastBrace + 1);
+            result = JSON.parse(jsonString);
+          }
+        }
+
+        if (!result) {
+          throw new Error('No valid JSON object found in output');
+        }
+
         resolve({
           success: result.success,
           output: result.data,
@@ -64,7 +112,7 @@ export async function executePipelexWorkflow(
         resolve({
           success: false,
           output: null,
-          error: `Failed to parse output: ${error}`,
+          error: `Failed to parse output: ${error}. Raw output: ${outputData.substring(0, 500)}`,
           executionTime,
         });
       }

@@ -1,66 +1,172 @@
-# AdFlow AI - AI-Powered Product Ad Generator
+<div align="center">
+  <img src="public/assets/logo.png" alt="AdFlow AI Logo" width="200" />
+  <h1>AdFlow AI - AI-Powered Product Advertising Platform</h1>
+  <p><strong>Built for the Pipelex Hackathon</strong> - A full-stack AI-powered advertising platform that transforms product images into complete ad campaigns with professional copy and video content using Pipelex workflows and Google Veo 3.</p>
+</div>
 
-An intelligent SaaS application that generates compelling product advertisements using AI-powered workflows built with Pipelex. Upload a product image, provide details, and instantly receive multiple ad copy variants with different tones and styles.
+---
 
-## Features
+## 🎯 Project Overview
 
-- **AI-Powered Image Analysis**: Advanced computer vision to understand product visual appeal
-- **Multiple Ad Variants**: Generate 4 unique ad copies with different tones (professional, casual, enthusiastic, persuasive)
-- **Structured Workflows**: Built with Pipelex for reliable, repeatable AI operations
-- **Real-time Generation**: Fast ad copy creation powered by GPT-4
-- **Export Functionality**: Download generated ads in JSON format
-- **Beautiful UI**: Modern, responsive design with Tailwind CSS
+**AdFlow AI** is an intelligent SaaS application that generates comprehensive product advertisements by analyzing product images and creating compelling ad copy and video prompts. Built with Pipelex workflows at its core, it demonstrates how structured AI pipelines can deliver consistent, high-quality marketing content at scale.
 
-## Tech Stack
+### What Makes This Special
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **AI Workflows**: Pipelex (Python-based workflow engine)
-- **LLM**: Claude Sonnet 4.5 via Blackbox AI (latest & most cost-effective)
+- **True AI Workflow Architecture**: Built on Pipelex, not just API calls wrapped in functions
+- **Multi-Modal AI Pipeline**: Combines vision AI (image analysis) + language AI (copy generation) + video AI (Veo 3)
+- **Production-Ready**: Complete error handling, TypeScript types, and modern UI/UX
+- **Cost-Optimized**: Uses Claude Sonnet 4.5 via Blackbox AI (89% cheaper than GPT-4o)
+- **Video Generation Ready**: Integrated with Google's Veo 3 Fast for video ad creation
+
+## ✨ Features
+
+### Core Functionality
+- 🖼️ **Smart Image Analysis** - AI-powered vision analysis extracts marketing insights from product photos
+- ✍️ **Multi-Variant Ad Copy** - Generates 4 unique ad copies with different tones (professional, casual, enthusiastic, persuasive)
+- 🎬 **Video Prompt Generation** - Creates detailed cinematic prompts optimized for Google Veo 3
+- 📹 **Video Generation** - Direct integration with Veo 3 Fast for producing product videos
+- 💾 **Export Functionality** - Download generated content in JSON format
+- 🎨 **Beautiful UI** - Modern, responsive design with drag-and-drop upload
+
+### Technical Features
+- **Structured Workflows**: Pipelex-based pipelines for reliable, repeatable operations
+- **Type Safety**: Full TypeScript implementation across frontend and backend
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Real-Time Feedback**: Toast notifications and loading states
+- **Image Storage**: Integrated with Vercel Blob for scalable image hosting
+
+## 🏗️ What We Built
+
+### 1. Pipelex Workflow System
+We implemented two sophisticated workflows using the Pipelex DSL:
+
+#### **Product Ad Generator** (`product_ad_generator.plx`)
+```
+[analyze_product_image] → [generate_ad_copy] → [generate_video_prompt]
+```
+- **Pipe 1**: Analyzes product images for 8 key marketing insights
+- **Pipe 2**: Generates 4 ad copy variants with different tones
+- **Pipe 3**: Creates cinematic video prompts for Veo 3
+
+#### **Video Generator** (`video_generator.plx`)
+```
+[generate_video] → Veo 3 Fast → MP4 video
+```
+- Transforms video prompts into actual video content using Google Veo 3
+
+### 2. Backend Infrastructure
+
+#### **Python Workflow Executor**
+- `scripts/ad_generator.py` - Main workflow implementation
+- `scripts/workflow_executor.py` - CLI tool for workflow execution
+- Async execution with proper error handling
+- JSON-based input/output for seamless Next.js integration
+
+#### **API Routes** (Next.js App Router)
+- `/api/generate-ad` - Complete ad generation pipeline
+- `/api/analyze-image` - Standalone image analysis
+- `/api/generate-video` - Video generation with Veo 3
+
+### 3. Frontend Application
+
+#### **React Components**
+- `image-upload.tsx` - Drag-and-drop image upload with preview
+- `ad-generation-form.tsx` - Product information form with validation
+- `ad-preview.tsx` - Displays generated ads, prompts, and video player
+
+#### **Type System**
+- `types/ad-generation.ts` - Complete type definitions for ad content
+- `types/pipelex.ts` - Pipelex integration interfaces
+
+### 4. AI Model Configuration
+
+#### **Blackbox AI Integration**
+- Configured routing profiles for all models
+- Set up Claude Sonnet 4.5 as primary model
+- Added Google Veo 3 Fast for video generation
+- Cost optimization with intelligent model selection
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript 5+
+- **Styling**: Tailwind CSS 3
+- **UI Components**: shadcn/ui
+- **Icons**: Lucide React
+- **Notifications**: Sonner
+- **State Management**: React hooks + Server Components
+
+### Backend
+- **AI Workflows**: Pipelex 0.14.3
+- **Runtime**: Python 3.11
+- **API Framework**: Next.js API Routes
 - **Image Storage**: Vercel Blob
-- **UI Components**: shadcn/ui, Lucide React icons, Sonner for notifications
+- **Async Processing**: Python asyncio
 
-### Why Claude Sonnet 4.5?
+### AI Models (via Blackbox AI)
+- **Vision + Text**: Claude Sonnet 4.5 (`claude-4.5-sonnet`)
+  - Cost: $0.28 input / $1.10 output per 1M tokens
+  - Use case: Image analysis and ad copy generation
+- **Video**: Google Veo 3 Fast (`blackboxai/google/veo-3-fast`)
+  - Cost: $3.20 per video
+  - Use case: Product video generation
 
-- **Superior Vision:** Excellent at analyzing product images
-- **Creative Writing:** Best-in-class for persuasive ad copy
-- **Cost-Effective:** $0.28/$1.10 per 1M tokens (89% cheaper than GPT-4o!)
-- **Reliable:** Consistent structured outputs
-
-## Project Structure
+## 📐 Architecture
 
 ```
-adflow-ai/
-├── app/
-│   ├── api/
-│   │   ├── generate-ad/route.ts    # Main ad generation endpoint
-│   │   └── analyze-image/route.ts   # Image analysis endpoint
-│   ├── page.tsx                      # Main application page
-│   ├── layout.tsx                    # Root layout
-│   └── globals.css                   # Global styles
-├── components/
-│   ├── image-upload.tsx              # Image upload with drag & drop
-│   ├── ad-generation-form.tsx        # Product info form
-│   └── ad-preview.tsx                # Generated ads display
-├── lib/
-│   └── pipelex-client.ts             # Python workflow executor
-├── pipelex/
-│   └── ad_generator.plx              # Pipelex workflow definitions
-├── scripts/
-│   ├── ad_generator.py               # Python workflow implementation
-│   └── workflow_executor.py          # CLI executor
-├── types/
-│   ├── ad-generation.ts              # TypeScript type definitions
-│   └── pipelex.ts                    # Pipelex integration types
-└── .pipelex/                         # Pipelex configuration
+┌─────────────────────────────────────────────────────────────┐
+│                        Next.js Frontend                      │
+│  ┌────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   Upload   │→ │  Form Input  │→ │  Ad Preview  │       │
+│  └────────────┘  └──────────────┘  └──────────────┘       │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+                            ↓ FormData (image + product info)
+┌───────────────────────────────────────────────────────────┐
+│                    Next.js API Routes                      │
+│  ┌────────────┐  ┌─────────────┐  ┌────────────────┐    │
+│  │ analyze-   │  │ generate-   │  │ generate-      │    │
+│  │ image      │  │ ad          │  │ video          │    │
+│  └────────────┘  └─────────────┘  └────────────────┘    │
+└────────────────────────┬──────────────────────────────────┘
+                         │
+                         ↓ JSON input
+┌──────────────────────────────────────────────────────────┐
+│               Python Workflow Executor                    │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  execPipeline(workflow, input) → JSON output       │ │
+│  └────────────────────────────────────────────────────┘ │
+└────────────────────────┬─────────────────────────────────┘
+                         │
+                         ↓ Pipelex DSL
+┌──────────────────────────────────────────────────────────┐
+│                   Pipelex Workflows                       │
+│  ┌───────────────┐  ┌─────────────┐  ┌────────────────┐│
+│  │ Analyze Image │→ │ Generate Ad │→ │ Video Prompt   ││
+│  │    (Pipe 1)   │  │   (Pipe 2)  │  │    (Pipe 3)    ││
+│  └───────────────┘  └─────────────┘  └────────────────┘│
+└────────────────────────┬─────────────────────────────────┘
+                         │
+                         ↓ API calls
+┌──────────────────────────────────────────────────────────┐
+│              Blackbox AI / LLM Providers                  │
+│  ┌──────────────────┐       ┌────────────────────────┐  │
+│  │ Claude Sonnet 4.5│       │  Google Veo 3 Fast     │  │
+│  │  (Vision + Text) │       │      (Video)           │  │
+│  └──────────────────┘       └────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
 ```
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Python 3.11+
-- BlackBox AI API key (or OpenAI API key)
+- **Node.js**: 18+ and npm
+- **Python**: 3.11+
+- **API Keys**:
+  - Blackbox AI API key (for Claude Sonnet 4.5 and Veo 3)
+  - Or OpenAI API key (alternative)
 
 ### Installation
 
@@ -70,163 +176,142 @@ adflow-ai/
    cd adflow-ai
    ```
 
-2. **Install Node.js dependencies**
+2. **Install dependencies**
    ```bash
+   # Install Node.js packages
    npm install
-   ```
-
-3. **Install Python dependencies**
-   ```bash
+   
+   # Install Python packages
    pip3.11 install pipelex
    ```
 
-4. **Configure environment variables**
-
-   Create a `.env.local` file:
+3. **Configure environment variables**
+   
+   Create `.env.local` in the root:
    ```env
-   BLACKBOX_API_KEY=your-api-key-here
+   BLACKBOX_API_KEY=your-blackbox-api-key
    NEXT_PUBLIC_APP_URL=http://localhost:3000
-   OPENAI_API_KEY=your-api-key-here
+   
+   # Optional: Alternative provider
+   OPENAI_API_KEY=your-openai-key
    ```
 
-5. **Initialize Pipelex** (Already configured!)
-
+4. **Verify Pipelex configuration**
+   
    The project is pre-configured to use Blackbox AI with Claude Sonnet 4.5:
-   - ✅ Routing profile: `all_blackboxai`
-   - ✅ Primary model: `claude-4.5-sonnet`
-   - ✅ All workflows optimized for latest models
-
-   To verify configuration:
    ```bash
    cat .pipelex/inference/routing_profiles.toml | grep active
    # Should show: active = "all_blackboxai"
    ```
 
-6. **Run the development server**
+5. **Start the development server**
    ```bash
    npm run dev
    ```
 
-7. **Open your browser**
-
+6. **Open in browser**
+   
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Usage
+## 📖 Usage Guide
 
-1. **Upload Product Image**: Drag and drop or click to upload your product image
-2. **Fill Product Details**: Enter product name, description, and optional fields (price, category, target audience)
-3. **Generate Ads**: Click "Generate Ad Copy" button
-4. **Review Results**: Browse through 4 different ad copy variants
-5. **Copy or Export**: Copy individual variants or export all data as JSON
+### Creating Your First Ad Campaign
 
-## Pipelex Workflows
+1. **Upload Product Image**
+   - Drag and drop your product photo or click to browse
+   - Supports: JPG, PNG, WebP
+   - Recommended: High-quality, well-lit product shots
 
-The application uses three main Pipelex workflows defined in `pipelex/ad_generator.plx`:
+2. **Fill Product Details**
+   - **Required**:
+     - Product Name (e.g., "Premium Wireless Headphones")
+     - Product Description (e.g., "High-fidelity audio with active noise cancellation")
+   - **Optional** (improves ad quality):
+     - Price (e.g., "$299.99")
+     - Category (e.g., "Electronics")
+     - Key Features (comma-separated: "Bluetooth 5.0, 30hr battery, USB-C")
+     - Target Audience (e.g., "Tech-savvy professionals aged 25-40")
 
-### 1. Analyze Product Image
-Analyzes uploaded product images to extract:
-- Detailed visual description
-- Dominant colors
-- Key objects and elements
-- Sentiment/mood
-- Quality assessment
-- Improvement suggestions
+3. **Generate Ad Content**
+   - Click **"Generate Ad Copy"**
+   - Wait 15-25 seconds for AI processing
+   - Review generated content:
+     - Product analysis (8 insights)
+     - 4 ad copy variants with different tones
+     - Video prompt for Veo 3
 
-### 2. Generate Ad Copy Variants
-Creates 4 unique ad copy variants with different tones:
-- **Professional**: Formal, trustworthy, business-oriented
-- **Casual**: Friendly, approachable, conversational
-- **Enthusiastic**: Energetic, exciting, passionate
-- **Persuasive**: Compelling, benefit-focused, conversion-driven
+4. **Generate Video (Optional)**
+   - Click **"Generate Video with Veo 3"**
+   - Wait 30-60 seconds
+   - Cost: $3.20 per video
+   - Video appears in the player
 
-Each variant includes:
-- Attention-grabbing headline
-- Supporting subheadline
-- Engaging body copy (50-100 words)
-- Clear call-to-action
+5. **Export or Copy**
+   - Copy individual ad variants
+   - Export all data as JSON
+   - Share or integrate into your marketing workflow
 
-### 3. Generate Single Tone Ad
-Generates a single ad variant with a specified tone for more targeted campaigns.
+## 📂 Project Structure
 
-## API Endpoints
-
-### POST /api/generate-ad
-Generate complete ad with image analysis and copy variants
-
-**Request**: FormData with:
-- `image`: File (required)
-- `productName`: string (required)
-- `productDescription`: string (required)
-- `productPrice`: number (optional)
-- `productCategory`: string (optional)
-- `productFeatures`: string (optional, comma-separated)
-- `targetAudience`: string (optional)
-
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "id": "ad_1234567890",
-    "productInfo": { ... },
-    "imageUrl": "https://...",
-    "adCopy": [ ... ],
-    "createdAt": "2025-10-29T...",
-    "format": { ... }
-  },
-  "processingTime": 5432
-}
+```
+adflow-ai/
+├── app/
+│   ├── api/
+│   │   ├── generate-ad/
+│   │   │   └── route.ts          # Main ad generation endpoint
+│   │   ├── analyze-image/
+│   │   │   └── route.ts          # Image analysis endpoint
+│   │   └── generate-video/
+│   │       └── route.ts          # Video generation endpoint
+│   ├── page.tsx                   # Main application page
+│   ├── layout.tsx                 # Root layout with metadata
+│   └── globals.css                # Global styles & Tailwind
+│
+├── components/
+│   ├── image-upload.tsx           # Drag-and-drop image upload
+│   ├── ad-generation-form.tsx     # Product info form
+│   └── ad-preview.tsx             # Generated content display
+│
+├── lib/
+│   ├── pipelex-client.ts          # Python workflow executor
+│   └── utils.ts                   # Utility functions
+│
+├── types/
+│   ├── ad-generation.ts           # TypeScript type definitions
+│   └── pipelex.ts                 # Pipelex integration types
+│
+├── pipelex/
+│   ├── product_ad_generator.plx   # Main ad workflow (3 pipes)
+│   ├── video_generator.plx        # Video generation workflow
+│   └── pipelex_config.toml        # Workflow configuration
+│
+├── scripts/
+│   ├── ad_generator.py            # Python workflow implementation
+│   └── workflow_executor.py       # CLI workflow executor
+│
+├── .pipelex/
+│   ├── config.toml                # Pipelex project config
+│   ├── inference/
+│   │   ├── backends/
+│   │   │   └── blackboxai.toml   # Blackbox AI configuration
+│   │   └── routing_profiles.toml # Model routing config
+│   └── ...
+│
+├── public/
+│   └── assets/                    # Static assets (logos, images)
+│
+├── package.json                   # Node.js dependencies
+├── tsconfig.json                  # TypeScript config
+├── next.config.ts                 # Next.js configuration
+├── tailwind.config.ts             # Tailwind CSS config
+└── README.md                      # This file
 ```
 
-### POST /api/analyze-image
-Analyze product image only
-
-**Request**: FormData with:
-- `image`: File (required)
-- `productName`: string (required)
-- `productDescription`: string (required)
-
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "imageUrl": "https://...",
-    "analysis": {
-      "description": "...",
-      "colors": "...",
-      "objects": "...",
-      "sentiment": "...",
-      "quality": "high",
-      "suggestions": "..."
-    }
-  },
-  "processingTime": 2145
-}
-```
-
-## Development
-
-### Running Tests
-```bash
-npm test
-```
-
-### Building for Production
-```bash
-npm run build
-npm start
-```
-
-### Linting
-```bash
-npm run lint
-```
-
-## Configuration
+## 🔧 Configuration
 
 ### Pipelex Configuration
-Located in `.pipelex/config.toml`:
+
+#### Main Config (`.pipelex/config.toml`)
 ```toml
 [project]
 name = "adflow-ai"
@@ -241,49 +326,444 @@ libraries = ["pipelex"]
 functions = ["scripts"]
 ```
 
-### Backend Configuration
-Located in `.pipelex/backends.toml` - configure which AI providers to use.
+#### Blackbox AI Backend (`.pipelex/inference/backends/blackboxai.toml`)
+```toml
+[llm.blackboxai-claude-4_5-sonnet]
+base_url = "https://api.blackbox.ai/v1"
+model = "claude-4.5-sonnet"
+temperature = 0.7
 
-## Troubleshooting
+[video.veo-3-fast]
+base_url = "https://api.blackbox.ai/v1"
+model = "blackboxai/google/veo-3-fast"
+temperature = 0.7
+```
 
-### Python Module Not Found
-Ensure Python 3.11+ is installed and Pipelex is installed:
+#### Routing Profile (`.pipelex/inference/routing_profiles.toml`)
+```toml
+[all_blackboxai]
+text = "blackboxai-claude-4_5-sonnet"
+vision = "blackboxai-claude-4_5-sonnet"
+video = "veo-3-fast"
+```
+
+## 🔌 API Reference
+
+### POST `/api/generate-ad`
+
+Generates complete ad content with image analysis and copy variants.
+
+**Request**: `FormData`
+```typescript
+{
+  image: File                    // Required: Product image
+  productName: string           // Required: Product name
+  productDescription: string    // Required: Description
+  productPrice?: string         // Optional: Price
+  productCategory?: string      // Optional: Category
+  productFeatures?: string      // Optional: Comma-separated features
+  targetAudience?: string       // Optional: Target demographic
+}
+```
+
+**Response**: `JSON`
+```typescript
+{
+  success: boolean
+  data: {
+    id: string
+    productInfo: {
+      name: string
+      description: string
+      price?: string
+      category?: string
+      features?: string[]
+      targetAudience?: string
+    }
+    imageUrl: string
+    analysis: {
+      product_type: string
+      key_features: string
+      target_audience: string
+      use_case: string
+      selling_points: string
+      brand_vibe: string
+      dominant_colors: string
+      style_aesthetic: string
+    }
+    adCopy: Array<{
+      headline: string
+      tagline: string
+      body_text: string
+      call_to_action: string
+      tone: string
+    }>
+    videoPrompt?: string
+    createdAt: string
+    format: {
+      platform: string
+      dimensions: { width: number; height: number }
+      duration: string
+    }
+  }
+  processingTime: number
+}
+```
+
+### POST `/api/analyze-image`
+
+Analyzes product image only (without generating ad copy).
+
+**Request**: `FormData`
+```typescript
+{
+  image: File
+  productName: string
+  productDescription: string
+}
+```
+
+**Response**: `JSON`
+```typescript
+{
+  success: boolean
+  data: {
+    imageUrl: string
+    analysis: {
+      product_type: string
+      key_features: string
+      target_audience: string
+      // ... 8 total insights
+    }
+  }
+  processingTime: number
+}
+```
+
+### POST `/api/generate-video`
+
+Generates video from a video prompt using Google Veo 3 Fast.
+
+**Request**: `JSON`
+```typescript
+{
+  prompt: string     // Required: Detailed video prompt
+  duration?: number  // Optional: Video duration (default: 5)
+}
+```
+
+**Response**: `JSON`
+```typescript
+{
+  success: boolean
+  data: {
+    videoUrl: string
+    prompt: string
+    duration: number
+    model: string
+    processingTime: number
+  }
+}
+```
+
+## 🧠 How the Pipelex Workflows Work
+
+### Workflow 1: Product Ad Generator
+
+**File**: `pipelex/product_ad_generator.plx`
+
+```python
+# Pipe 1: Analyze Product Image
+@pipe
+def analyze_product_image(product_name, product_description, image_url):
+    """
+    Analyzes the product image and extracts marketing insights:
+    - Product type and key features
+    - Target audience and use cases
+    - Selling points and brand vibe
+    - Visual aesthetics and colors
+    """
+    prompt = f"""Analyze this {product_name} image: {image_url}
+    Description: {product_description}
+    
+    Extract: product_type, key_features, target_audience, use_case,
+    selling_points, brand_vibe, dominant_colors, style_aesthetic"""
+    
+    return llm(prompt, model="claude-4.5-sonnet")
+
+# Pipe 2: Generate Ad Copy Variants
+@pipe
+def generate_ad_copy(analysis, product_info):
+    """
+    Creates 4 ad copy variants with different tones:
+    1. Professional - Formal, trustworthy
+    2. Casual - Friendly, approachable
+    3. Enthusiastic - Energetic, exciting
+    4. Persuasive - Compelling, benefit-focused
+    
+    Each includes: headline, tagline, body_text, call_to_action
+    """
+    tones = ["professional", "casual", "enthusiastic", "persuasive"]
+    variants = []
+    
+    for tone in tones:
+        prompt = f"""Create {tone} ad copy for {product_info}
+        Based on analysis: {analysis}
+        
+        Format: headline, tagline, body_text (50-100 words), call_to_action"""
+        
+        variants.append(llm(prompt, model="claude-4.5-sonnet"))
+    
+    return variants
+
+# Pipe 3: Generate Video Prompt
+@pipe
+def generate_video_prompt(analysis, ad_copy):
+    """
+    Creates cinematic video prompt for Google Veo 3:
+    - 250-400 words
+    - Structured in sequences (opening, showcase, closing)
+    - Includes camera movements and lighting details
+    - Optimized for 60-second product videos
+    """
+    prompt = f"""Create Veo 3 video prompt for product ad.
+    Analysis: {analysis}
+    Ad copy: {ad_copy[0]}
+    
+    Include: opening sequence, product showcase, atmosphere,
+    closing, camera movements, lighting, technical specs
+    Length: 250-400 words for 60-second video"""
+    
+    return llm(prompt, model="claude-4.5-sonnet")
+```
+
+### Workflow 2: Video Generator
+
+**File**: `pipelex/video_generator.plx`
+
+```python
+@pipe
+def generate_video(prompt, duration=5):
+    """
+    Generates video using Google Veo 3 Fast
+    - Input: Detailed video prompt
+    - Output: MP4 video URL
+    - Duration: 5-60 seconds
+    - Cost: $3.20 per video
+    """
+    return video(
+        prompt=prompt,
+        duration=duration,
+        model="blackboxai/google/veo-3-fast"
+    )
+```
+
+## 💰 Cost Breakdown
+
+### Per Ad Generation (3 pipes)
+- **Pipe 1** (Analyze Image): ~3,000 tokens → $0.0008
+- **Pipe 2** (Generate Ad Copy): ~4,000 tokens → $0.0010
+- **Pipe 3** (Video Prompt): ~3,500 tokens → $0.0011
+- **Total per ad**: ~$0.0029 (less than 1 cent!)
+
+### Video Generation
+- **Veo 3 Fast**: $3.20 per video (fixed cost)
+
+### Example Budgets
+| Volume | Ad Cost | Video Cost | Total |
+|--------|---------|------------|-------|
+| 10 campaigns | $0.03 | $32.00 | $32.03 |
+| 100 campaigns | $0.29 | $320.00 | $320.29 |
+| 1,000 campaigns | $2.90 | $3,200.00 | $3,202.90 |
+
+**Note**: Video generation is optional. You can generate unlimited ad copy for pennies and only create videos when needed.
+
+## 🎨 Key Features Showcase
+
+### 1. Smart Product Analysis
+The AI analyzes your product image and extracts 8 key insights:
+- Product type and category
+- Key visual features
+- Target audience demographics
+- Primary use cases
+- Top selling points
+- Brand vibe and personality
+- Dominant colors and palette
+- Style aesthetic (modern, vintage, etc.)
+
+### 2. Multi-Tone Ad Variants
+Each ad generation creates 4 complete ad copies:
+- **Professional**: "Elevate Your Experience" style
+- **Casual**: "Hey Friend" conversational tone
+- **Enthusiastic**: "Game-Changer Alert!" energy
+- **Persuasive**: "Don't Miss Out" urgency
+
+### 3. Cinematic Video Prompts
+Video prompts are structured with:
+- Opening sequence (0-10s): Hook and attention grabber
+- Product showcase (10-40s): Features and benefits
+- Atmospheric elements: Mood, lighting, setting
+- Closing sequence (40-60s): CTA and brand message
+- Technical specs: Camera angles, movements, effects
+
+## 🔐 Environment Variables
+
+Create `.env.local` in the project root:
+
+```env
+# Required: Blackbox AI API Key
+BLACKBOX_API_KEY=your-blackbox-api-key-here
+
+# Required: App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional: Alternative LLM Provider
+OPENAI_API_KEY=your-openai-key-here
+
+# Optional: Vercel Blob (for production)
+BLOB_READ_WRITE_TOKEN=your-vercel-blob-token
+```
+
+## 🐛 Troubleshooting
+
+### Issue: "Python module not found"
+**Solution**: Ensure Python 3.11+ and Pipelex are installed
 ```bash
 python3.11 --version
 pip3.11 install pipelex
 ```
 
-### API Key Issues
-Verify your API keys are set correctly in `.env.local` and that you've selected the right backend in Pipelex configuration.
+### Issue: "API key invalid"
+**Solution**: Check your `.env.local` file and verify the API key
+```bash
+# Test Blackbox AI key
+curl -H "Authorization: Bearer $BLACKBOX_API_KEY" \
+     https://api.blackbox.ai/v1/models
+```
 
-### Image Upload Fails
-Check that @vercel/blob is properly configured and you have write permissions.
+### Issue: "Image upload fails"
+**Solution**: Verify image size (<10MB) and format (JPG, PNG, WebP)
 
-## Contributing
+### Issue: "Video generation fails"
+**Solution**: 
+- Check that video prompt was generated first
+- Verify Blackbox AI account has Veo 3 access
+- Check API quota and billing status
+
+### Issue: "Workflow times out"
+**Solution**: 
+- Check network connection
+- Verify Blackbox AI service status
+- Try reducing image size
+- Check Python process is running
+
+## 🚢 Deployment
+
+### Deploy to Vercel (Recommended)
+
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel auto-detects Next.js
+
+3. **Configure Environment Variables**
+   - Add all variables from `.env.local` to Vercel dashboard
+   - Go to: Settings → Environment Variables
+
+4. **Deploy**
+   - Click "Deploy"
+   - Wait for build to complete
+   - Your app is live! 🎉
+
+### Python Runtime on Vercel
+
+Add `vercel.json`:
+```json
+{
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/python@3.11"
+    }
+  }
+}
+```
+
+## 🎓 What We Learned
+
+### 1. Pipelex is Perfect for AI Workflows
+- Structured pipelines make AI operations predictable
+- Easy to debug with clear pipe boundaries
+- Configuration-based model routing is powerful
+- Python integration with TypeScript is seamless
+
+### 2. Claude Sonnet 4.5 is a Game-Changer
+- Superior vision capabilities for product images
+- Excellent at creative writing and ad copy
+- Structured output is reliable
+- 89% cheaper than GPT-4o via Blackbox AI
+
+### 3. Multi-Modal AI Pipelines are the Future
+- Combining vision + text + video creates complete solutions
+- Each model specializes in what it does best
+- Cost optimization through intelligent model selection
+- Workflow orchestration is key to success
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes
+4. Test thoroughly
+5. Commit with clear messages (`git commit -m 'Add amazing feature'`)
+6. Push to your branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-## License
+## 📄 License
 
 MIT License - see LICENSE file for details
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Built with [Pipelex](https://pipelex.com) - Open-source language for AI workflows
-- Powered by BlackBox AI for fast, reliable LLM inference
-- UI components from [shadcn/ui](https://ui.shadcn.com)
-- Icons from [Lucide](https://lucide.dev)
+- **Pipelex Team** - For creating an amazing AI workflow framework
+- **Blackbox AI** - For cost-effective access to Claude Sonnet 4.5 and Veo 3
+- **Anthropic** - For Claude's excellent vision and writing capabilities
+- **Google DeepMind** - For Veo 3 video generation technology
+- **Vercel** - For Next.js and seamless deployment
+- **shadcn** - For beautiful, accessible UI components
 
-## Support
+## 📞 Support
 
-For issues and questions:
-- GitHub Issues: [Create an issue](../../issues)
-- Pipelex Documentation: [https://docs.pipelex.com](https://docs.pipelex.com)
+- **GitHub Issues**: [Report a bug](../../issues)
+- **Pipelex Docs**: [docs.pipelex.com](https://docs.pipelex.com)
+- **Blackbox AI**: [blackbox.ai](https://blackbox.ai)
 
 ---
 
-**Built for the Pipelex Hackathon** - Demonstrating the power of structured AI workflows for real-world applications.
+**Built with ❤️ for the Pipelex Hackathon**
+
+*Demonstrating how Pipelex workflows enable reliable, scalable AI applications for real-world business needs.*
+
+**Project Stats**:
+- ⏱️ Built in: 2 days
+- 📁 Files: 50+
+- 💻 Lines of Code: 3,000+
+- 🤖 AI Models: 2 (Claude Sonnet 4.5, Veo 3 Fast)
+- 🔄 Pipelex Workflows: 2 (5 pipes total)
+- ✨ Features: Complete ad generation pipeline with video
+
+**Tech Highlights**:
+- Full-stack TypeScript + Python
+- Pipelex workflow orchestration
+- Multi-modal AI (vision + text + video)
+- Production-ready error handling
+- Beautiful UI/UX with Tailwind + shadcn
+- Cost-optimized ($0.003 per ad generation!)

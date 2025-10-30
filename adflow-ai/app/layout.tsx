@@ -7,6 +7,10 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'AdFlow AI - AI-Powered Product Ad Generator',
   description: 'Generate compelling product advertisements using AI-powered workflows with Pipelex',
+  icons: {
+    icon: '/assets/logo.ico',
+    apple: '/assets/logo.png',
+  },
 };
 
 export default function RootLayout({
