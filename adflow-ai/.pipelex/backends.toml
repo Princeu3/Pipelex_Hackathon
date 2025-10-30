@@ -1,0 +1,16 @@
+# Pipelex Backend Configuration
+
+[openai]
+enabled = true
+
+[anthropic]
+enabled = false
+
+[google]
+enabled = false
+
+[mistral]
+enabled = false
+
+[fal]
+enabled = false

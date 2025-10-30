@@ -1,0 +1,16 @@
+# Pipelex Configuration File
+
+[project]
+name = "adflow-ai"
+description = "AI-powered product ad generator"
+version = "0.1.0"
+
+[telemetry]
+enabled = false
+
+[paths]
+libraries = ["pipelex"]
+functions = ["scripts"]
+
+[logging]
+level = "INFO"

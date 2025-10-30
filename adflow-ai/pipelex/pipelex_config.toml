@@ -1,0 +1,185 @@
+####################################################################################################
+# AdFlow AI - Pipelex Configuration
+####################################################################################################
+#
+# This configuration ensures all inference routes through Blackbox AI
+# with the latest and most capable models for product ad generation
+#
+# Documentation: https://docs.pipelex.com
+# Support: https://go.pipelex.com/discord
+#
+####################################################################################################
+
+[inference]
+# Use Blackbox AI as the primary provider
+default_backend = "blackboxai"
+routing_profile = "all_blackboxai"
+
+####################################################################################################
+# Model Selection Strategy
+####################################################################################################
+
+[models]
+# Vision model for product image analysis
+# Claude 4.5 Sonnet excels at visual understanding and detailed descriptions
+vision_model = "claude-4.5-sonnet"
+
+# Text generation for marketing copy
+# Claude 4.5 Sonnet is superior for creative, persuasive copywriting
+copywriting_model = "claude-4.5-sonnet"
+
+# Text generation for structured data
+# Claude 4.5 Sonnet handles structured output excellently
+structured_model = "claude-4.5-sonnet"
+
+# Alternative models for specific tasks
+gpt_vision_model = "gpt-4o"
+gemini_model = "gemini-2.5-pro"
+fast_model = "gpt-4o-mini"
+
+####################################################################################################
+# Model Aliases for Workflow Integration
+####################################################################################################
+
+[model_aliases]
+# Primary aliases used in .plx workflows
+llm_vision = "vision_model"
+llm_copywriter = "copywriting_model"
+llm_analyzer = "vision_model"
+llm_structured = "structured_model"
+
+# Task-specific aliases
+llm_creative = "copywriting_model"
+llm_factual = "structured_model"
+llm_fast = "fast_model"
+
+####################################################################################################
+# Temperature Settings by Task
+####################################################################################################
+
+[temperature_presets]
+# Image analysis - balanced creativity and accuracy
+image_analysis = 0.7
+
+# Creative copywriting - high creativity
+ad_copywriting = 0.9
+
+# Factual descriptions - low temperature for consistency
+product_facts = 0.3
+
+# Tone variation - medium-high for variety
+tone_generation = 0.85
+
+# Refinement - medium for improvements
+ad_refinement = 0.7
+
+# Structured extraction - very low for precision
+structured_extraction = 0.1
+
+####################################################################################################
+# Provider Configuration
+####################################################################################################
+
+[providers.blackbox]
+# Blackbox AI is OpenAI-compatible
+type = "openai"
+base_url = "https://api.blackbox.ai/v1"
+api_key_env = "BLACKBOX_API_KEY"
+
+# Enable all model types
+enabled_models = [
+    "claude-4.5-sonnet",
+    "claude-3.7-sonnet",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+]
+
+####################################################################################################
+# Optimization Settings
+####################################################################################################
+
+[optimization]
+# Cache responses for identical inputs
+enable_caching = true
+cache_ttl = 3600  # 1 hour
+
+# Retry logic for failed requests
+max_retries = 3
+retry_delay = 1.0  # seconds
+
+# Timeout settings
+request_timeout = 120  # seconds
+connection_timeout = 30  # seconds
+
+####################################################################################################
+# Logging and Monitoring
+####################################################################################################
+
+[logging]
+# Log level: DEBUG, INFO, WARNING, ERROR
+level = "INFO"
+
+# Log model usage and costs
+track_usage = true
+track_latency = true
+
+# Save logs to file
+log_to_file = true
+log_file_path = ".pipelex/logs/adflow.log"
+
+####################################################################################################
+# Quality Assurance
+####################################################################################################
+
+[quality]
+# Validate structured outputs
+validate_schema = true
+
+# Retry on validation failures
+retry_on_validation_error = true
+max_validation_retries = 2
+
+# Quality thresholds
+min_response_length = 10
+max_response_length = 10000
+
+####################################################################################################
+# Cost Management
+####################################################################################################
+
+[costs]
+# Track and limit costs
+enable_cost_tracking = true
+
+# Budget alerts (in USD)
+daily_budget_limit = 10.0
+monthly_budget_limit = 100.0
+
+# Cost optimization
+prefer_cheaper_models_when_possible = false  # Always use best models
+fallback_to_cheaper_on_error = false
+
+####################################################################################################
+# Notes
+####################################################################################################
+
+# Model Capabilities Summary:
+# - Claude 4.5 Sonnet: Best for creative writing, vision analysis, reasoning
+#   Cost: $0.28 input / $1.10 output per 1M tokens
+#
+# - GPT-4o: Excellent vision, good general purpose
+#   Cost: $2.50 input / $10.00 output per 1M tokens
+#
+# - Gemini 2.5 Pro: Strong reasoning, large context
+#   Cost: $1.25 input / $10.00 output per 1M tokens
+#
+# - GPT-4o Mini: Fast, cheap, good for simple tasks
+#   Cost: $0.15 input / $0.60 output per 1M tokens
+
+# AdFlow AI Strategy:
+# 1. Use Claude 4.5 Sonnet for all primary tasks (vision + copywriting)
+# 2. It's the most cost-effective premium model ($0.28/$1.10 vs GPT-4o's $2.50/$10.00)
+# 3. Superior performance on creative writing and visual analysis
+# 4. All traffic routes through Blackbox AI for unified billing and monitoring

@@ -1,0 +1,78 @@
+####################################################################################################
+# AdFlow AI - Pipelex Model Deck Overrides
+####################################################################################################
+#
+# Custom model configurations for AdFlow AI product ad generation
+# Optimized to use Blackbox AI with Claude Sonnet 4.5 and latest models
+#
+# Documentation: https://docs.pipelex.com
+# Support: https://go.pipelex.com/discord
+#
+####################################################################################################
+
+####################################################################################################
+# Custom Aliases for AdFlow AI
+####################################################################################################
+
+[aliases]
+# Primary models for ad generation - all via Blackbox AI
+adflow_vision = "base-claude"
+adflow_copywriter = "base-claude"
+adflow_analyzer = "base-claude"
+adflow_creative = "base-claude"
+
+# Alternative high-quality models
+adflow_vision_alt = "gpt-4o"
+adflow_gemini = "gemini-2.5-pro"
+adflow_fast = "gpt-4o-mini"
+
+####################################################################################################
+# LLM Deck Overrides
+####################################################################################################
+
+[llm.choice_overrides]
+# Disable default overrides - we specify models directly in workflows
+for_text = "disabled"
+for_object = "disabled"
+
+####################################################################################################
+# Custom LLM Presets for Ad Generation
+####################################################################################################
+
+[llm.presets]
+
+# Product image analysis - Claude 4.5 Sonnet excels at vision
+llm_for_product_analysis = { model = "base-claude", temperature = 0.7 }
+
+# Ad copywriting - Creative and persuasive
+llm_for_ad_copywriting = { model = "base-claude", temperature = 0.9 }
+
+# Factual product descriptions - Lower temperature for consistency
+llm_for_product_description = { model = "base-claude", temperature = 0.3 }
+
+# Marketing tone generation - High creativity
+llm_for_marketing_tone = { model = "base-claude", temperature = 0.85 }
+
+# Ad refinement and editing
+llm_for_ad_refinement = { model = "base-claude", temperature = 0.7 }
+
+# Structured data extraction - Very low temperature
+llm_for_structured_extraction = { model = "base-claude", temperature = 0.1 }
+
+# Fast iterations for testing
+llm_for_testing = { model = "gpt-4o-mini", temperature = 0.5 }
+
+####################################################################################################
+# Image Generation Overrides
+####################################################################################################
+
+[img_gen.presets]
+
+# High-quality product images using Flux Pro Ultra
+img_gen_for_adflow_product = { model = "flux-pro/v1.1-ultra", quality = "high", guidance_scale = 8.5, is_moderated = true, safety_tolerance = 2 }
+
+# Standard quality for mockups
+img_gen_for_adflow_mockup = { model = "flux-pro/v1.1", quality = "medium", guidance_scale = 7.0, is_moderated = true, safety_tolerance = 3 }
+
+# Fast generation for testing
+img_gen_for_adflow_test = { model = "fast-lightning-sdxl", nb_steps = 4, guidance_scale = 5.0, is_moderated = true, safety_tolerance = 4 }
