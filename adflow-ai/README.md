@@ -2,6 +2,17 @@
   <img src="public/assets/logo.png" alt="AdFlow AI Logo" width="200" />
   <h1>AdFlow AI - AI-Powered Product Advertising Platform</h1>
   <p><strong>Built for the Pipelex Hackathon</strong> - A full-stack AI-powered advertising platform that transforms product images into complete ad campaigns with professional copy and video content using Pipelex workflows and Google Veo 3.</p>
+  
+  <br/>
+  
+  ### 🎬 Demo Video
+  
+  <video width="100%" max-width="800" controls>
+    <source src="public/assets/tmp1880_1_w.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  
+  <p><em>Watch how AdFlow AI transforms a product image into professional ad copy and video in seconds</em></p>
 </div>
 
 ---
