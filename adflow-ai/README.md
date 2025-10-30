@@ -7,12 +7,11 @@
   
   ### 🎬 Demo Video
   
-  <video width="100%" max-width="800" controls>
-    <source src="public/assets/tmp1880_1_w.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  [![Watch Demo Video](https://img.shields.io/badge/▶️_Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](public/assets/tmp1880_1_w.mp4)
   
-  <p><em>Watch how AdFlow AI transforms a product image into professional ad copy and video in seconds</em></p>
+  <p><em>Click above to watch how AdFlow AI transforms a product image into professional ad copy and video in seconds</em></p>
+  
+  <p><sub>💡 <strong>Tip:</strong> Click "View raw" or "Download" to watch the video if your browser doesn't play it inline</sub></p>
 </div>
 
 ---
